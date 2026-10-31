@@ -1,0 +1,876 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Matrices | Ingeniería en Sistemas</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #081426;
+    color: #eaf2ff;
+    padding: 30px 18px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.tag {
+    display: inline-block;
+    background: #15375b;
+    color: #69caff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+}
+
+h1 {
+    font-size: clamp(27px, 5vw, 42px);
+    margin-bottom: 12px;
+}
+
+header p {
+    color: #a9bdd5;
+    line-height: 1.6;
+}
+
+.section {
+    background: #102039;
+    border: 1px solid #203957;
+    border-radius: 15px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #70c9ff;
+    font-size: 21px;
+    margin-bottom: 16px;
+}
+
+h3 {
+    color: #83cfff;
+    margin-bottom: 12px;
+}
+
+.description {
+    color: #b5c6db;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+}
+
+.card {
+    background: #172d4b;
+    border: 1px solid #294766;
+    padding: 18px;
+    border-radius: 11px;
+}
+
+.card p {
+    color: #c1d0e3;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.card strong {
+    color: #63d9b0;
+}
+
+.matrices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+.matrix-box {
+    background: #09182b;
+    padding: 18px;
+    border-radius: 12px;
+}
+
+.matrix {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 230px;
+    margin: 15px auto;
+    position: relative;
+    padding: 8px 18px;
+}
+
+.matrix::before,
+.matrix::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    border-top: 2px solid #70c9ff;
+    border-bottom: 2px solid #70c9ff;
+}
+
+.matrix::before {
+    left: 0;
+    border-left: 2px solid #70c9ff;
+}
+
+.matrix::after {
+    right: 0;
+    border-right: 2px solid #70c9ff;
+}
+
+.matrix input {
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+    padding: 12px 5px;
+    background: #172d4b;
+    color: white;
+    border: 1px solid #365779;
+    border-radius: 6px;
+    font-size: 17px;
+}
+
+input:focus,
+select:focus {
+    outline: 2px solid #48b9ef;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 18px;
+}
+
+.control label {
+    display: block;
+    color: #b8cce2;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+select,
+.control input {
+    width: 100%;
+    padding: 12px;
+    background: #09182b;
+    color: white;
+    border: 1px solid #365779;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+button {
+    background: #168bd0;
+    color: white;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 16px;
+}
+
+button:hover {
+    background: #0873b4;
+}
+
+.secondary {
+    background: #294766;
+}
+
+.result {
+    background: #09182b;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 18px;
+    min-height: 90px;
+    overflow-x: auto;
+}
+
+.result-matrix {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(45px, 80px));
+    gap: 9px;
+    width: fit-content;
+    margin: 15px auto;
+    padding: 8px 15px;
+    position: relative;
+}
+
+.result-matrix::before,
+.result-matrix::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 7px;
+    border-top: 2px solid #63d9b0;
+    border-bottom: 2px solid #63d9b0;
+}
+
+.result-matrix::before {
+    left: 0;
+    border-left: 2px solid #63d9b0;
+}
+
+.result-matrix::after {
+    right: 0;
+    border-right: 2px solid #63d9b0;
+}
+
+.result-cell {
+    background: #173b3b;
+    color: #63e0b4;
+    padding: 12px 5px;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.formula {
+    color: #72d1ff;
+    font-family: "Courier New", monospace;
+    line-height: 1.9;
+    margin-top: 12px;
+    overflow-wrap: anywhere;
+}
+
+.notice {
+    color: #f3c47b;
+    line-height: 1.7;
+}
+
+.transform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+}
+
+.transform-card {
+    background: #172d4b;
+    border: 1px solid #294766;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.transform-card p {
+    color: #c1d0e3;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.point-inputs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.point-inputs label {
+    color: #b8cce2;
+    font-size: 14px;
+}
+
+.point-inputs input {
+    display: block;
+    width: 100%;
+    padding: 11px;
+    margin-top: 7px;
+    background: #09182b;
+    border: 1px solid #365779;
+    border-radius: 8px;
+    color: white;
+}
+
+.conclusion {
+    background: #12302f;
+    border-left: 4px solid #36cda2;
+    padding: 20px;
+    border-radius: 10px;
+    color: #c8e6df;
+    line-height: 1.8;
+}
+
+footer {
+    text-align: center;
+    color: #7188a5;
+    padding: 20px;
+    font-size: 13px;
+}
+
+@media(max-width: 550px) {
+    body {
+        padding: 18px 10px;
+    }
+
+    .section {
+        padding: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <div class="tag">INGENIERÍA EN SISTEMAS | ÁLGEBRA LINEAL</div>
+    <h1>Matrices y Operaciones</h1>
+    <p>Calculadora interactiva y transformaciones geométricas en el plano</p>
+</header>
+
+<section class="section">
+    <h2>01. Introducción</h2>
+
+    <p class="description">
+        Las matrices son arreglos rectangulares de números que permiten
+        representar información y realizar operaciones matemáticas.
+        En informática, ingeniería y gráficos digitales se utilizan
+        para transformar coordenadas, representar movimientos y
+        resolver diferentes problemas matemáticos.
+    </p>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Operaciones</h3>
+            <p>Suma, multiplicación escalar y producto de matrices.</p>
+        </div>
+
+        <div class="card">
+            <h3>Propiedades</h3>
+            <p>Determinantes, transpuestas, inversas y adjuntas.</p>
+        </div>
+
+        <div class="card">
+            <h3>Aplicaciones</h3>
+            <p>Rotaciones, reflexiones, escalamiento y cizallamiento.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <h2>02. Ingresar matrices</h2>
+
+    <p class="description">
+        Ingresá los cuatro valores de cada matriz. La aplicación
+        utilizará estos datos para realizar las operaciones.
+    </p>
+
+    <div class="matrices">
+
+        <div class="matrix-box">
+            <h3>Matriz A</h3>
+            <div class="matrix">
+                <input id="a11" type="number" value="2" step="any">
+                <input id="a12" type="number" value="1" step="any">
+                <input id="a21" type="number" value="3" step="any">
+                <input id="a22" type="number" value="4" step="any">
+            </div>
+        </div>
+
+        <div class="matrix-box">
+            <h3>Matriz B</h3>
+            <div class="matrix">
+                <input id="b11" type="number" value="1" step="any">
+                <input id="b12" type="number" value="2" step="any">
+                <input id="b21" type="number" value="2" step="any">
+                <input id="b22" type="number" value="1" step="any">
+            </div>
+        </div>
+
+    </div>
+
+    <button class="secondary" onclick="restablecer()">
+        Restablecer valores
+    </button>
+</section>
+
+<section class="section">
+    <h2>03. Calculadora de operaciones</h2>
+
+    <p class="description">
+        Seleccioná una operación para calcularla con las matrices A y B.
+    </p>
+
+    <div class="controls">
+        <div class="control">
+            <label for="operacion">Operación matemática</label>
+            <select id="operacion">
+                <option value="suma">Suma A + B</option>
+                <option value="resta">Resta A - B</option>
+                <option value="escalar">Multiplicación escalar</option>
+                <option value="producto">Producto A × B</option>
+                <option value="detA">Determinante de A</option>
+                <option value="detB">Determinante de B</option>
+                <option value="transA">Transpuesta de A</option>
+                <option value="transB">Transpuesta de B</option>
+                <option value="invA">Inversa de A</option>
+                <option value="invB">Inversa de B</option>
+                <option value="adjA">Adjunta de A</option>
+                <option value="adjB">Adjunta de B</option>
+            </select>
+        </div>
+
+        <div class="control" id="escalarControl">
+            <label for="escalar">Valor del escalar</label>
+            <input id="escalar" type="number" value="3" step="any">
+        </div>
+    </div>
+
+    <button onclick="calcular()">Calcular operación</button>
+
+    <div class="result" id="resultado">
+        <p class="description">
+            El resultado de tu operación aparecerá aquí.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <h2>04. Transformaciones geométricas</h2>
+
+    <p class="description">
+        Las matrices también permiten transformar puntos en el plano
+        cartesiano. Seleccioná una transformación y observá cómo
+        cambian las coordenadas de un punto.
+    </p>
+
+    <div class="transform-grid">
+        <div class="transform-card">
+            <h3>Escalamiento</h3>
+            <p>Modifica el tamaño de una figura mediante factores de escala.</p>
+            <div class="formula">
+                [2 0]<br>
+                [0 2]
+            </div>
+        </div>
+
+        <div class="transform-card">
+            <h3>Rotación</h3>
+            <p>Gira una figura alrededor del origen del plano.</p>
+            <div class="formula">
+                [cos θ -sen θ]<br>
+                [sen θ cos θ]
+            </div>
+        </div>
+
+        <div class="transform-card">
+            <h3>Reflexión</h3>
+            <p>Produce el efecto de espejo sobre un eje.</p>
+            <div class="formula">
+                [-1 0]<br>
+                [0 1]
+            </div>
+        </div>
+
+        <div class="transform-card">
+            <h3>Cizallamiento</h3>
+            <p>Inclina la figura modificando sus coordenadas.</p>
+            <div class="formula">
+                [1 1]<br>
+                [0 1]
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control">
+            <label for="transformacion">Tipo de transformación</label>
+            <select id="transformacion">
+                <option value="escala">Escalamiento</option>
+                <option value="rotacion">Rotación</option>
+                <option value="reflexionX">Reflexión eje X</option>
+                <option value="reflexionY">Reflexión eje Y</option>
+                <option value="cizalla">Cizallamiento</option>
+            </select>
+        </div>
+
+        <div class="control" id="anguloControl">
+            <label for="angulo">Ángulo de rotación (grados)</label>
+            <input id="angulo" type="number" value="90">
+        </div>
+
+        <div class="control" id="escalaControl2">
+            <label for="factor">Factor de escala</label>
+            <input id="factor" type="number" value="2" step="any">
+        </div>
+    </div>
+
+    <div class="point-inputs">
+        <label>
+            Coordenada X
+            <input id="px" type="number" value="2" step="any">
+        </label>
+
+        <label>
+            Coordenada Y
+            <input id="py" type="number" value="1" step="any">
+        </label>
+    </div>
+
+    <button onclick="transformar()">Aplicar transformación</button>
+
+    <div class="result" id="resultadoTransformacion">
+        <p class="description">
+            El resultado de la transformación aparecerá aquí.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <h2>05. Interpretación de resultados</h2>
+
+    <div class="conclusion">
+        La aplicación demuestra cómo las matrices permiten realizar
+        diferentes operaciones algebraicas y resolver transformaciones
+        geométricas en dos dimensiones.
+
+        <br><br>
+
+        El determinante permite identificar si una matriz cuadrada
+        tiene inversa. La transpuesta intercambia filas por columnas,
+        mientras que la adjunta permite calcular la inversa mediante
+        la relación entre la matriz de cofactores y su transpuesta.
+
+        <br><br>
+
+        En las transformaciones geométricas, las matrices permiten
+        modificar la posición y orientación de puntos y figuras
+        dentro del plano cartesiano.
+    </div>
+</section>
+
+<footer>
+    Proyecto académico | Ingeniería en Sistemas | Matrices y Operaciones
+</footer>
+
+</div>
+
+<script>
+function obtenerMatriz(letra) {
+    const ids = [
+        letra + "11",
+        letra + "12",
+        letra + "21",
+        letra + "22"
+    ];
+
+    const valores = ids.map(id =>
+        Number(document.getElementById(id).value)
+    );
+
+    if (!valores.every(Number.isFinite)) {
+        throw new Error("Ingresá valores numéricos válidos.");
+    }
+
+    return [
+        [valores[0], valores[1]],
+        [valores[2], valores[3]]
+    ];
+}
+
+function formato(n) {
+    const valor = Math.abs(n) < 1e-10 ? 0 : n;
+    return Number(valor.toFixed(4)).toString();
+}
+
+function mostrarMatriz(matriz) {
+    return `
+        <div class="result-matrix">
+            ${matriz.flat().map(n =>
+                `<div class="result-cell">${formato(n)}</div>`
+            ).join("")}
+        </div>
+    `;
+}
+
+function sumar(A, B) {
+    return A.map((fila, i) =>
+        fila.map((valor, j) => valor + B[i][j])
+    );
+}
+
+function restar(A, B) {
+    return A.map((fila, i) =>
+        fila.map((valor, j) => valor - B[i][j])
+    );
+}
+
+function escalar(A, k) {
+    return A.map(fila => fila.map(valor => valor * k));
+}
+
+function multiplicar(A, B) {
+    return [
+        [
+            A[0][0] * B[0][0] + A[0][1] * B[1][0],
+            A[0][0] * B[0][1] + A[0][1] * B[1][1]
+        ],
+        [
+            A[1][0] * B[0][0] + A[1][1] * B[1][0],
+            A[1][0] * B[0][1] + A[1][1] * B[1][1]
+        ]
+    ];
+}
+
+function determinante(A) {
+    return A[0][0] * A[1][1] -
+           A[0][1] * A[1][0];
+}
+
+function transpuesta(A) {
+    return [
+        [A[0][0], A[1][0]],
+        [A[0][1], A[1][1]]
+    ];
+}
+
+function adjunta(A) {
+    return [
+        [A[1][1], -A[0][1]],
+        [-A[1][0], A[0][0]]
+    ];
+}
+
+function inversa(A) {
+    const det = determinante(A);
+
+    if (Math.abs(det) < 1e-10) {
+        return null;
+    }
+
+    return escalar(adjunta(A), 1 / det);
+}
+
+function calcular() {
+    try {
+        const A = obtenerMatriz("a");
+        const B = obtenerMatriz("b");
+
+        const operacion = document.getElementById("operacion").value;
+        const resultado = document.getElementById("resultado");
+
+        let titulo = "";
+        let detalle = "";
+        let contenido = "";
+
+        switch (operacion) {
+            case "suma":
+                titulo = "Suma de matrices";
+                contenido = mostrarMatriz(sumar(A, B));
+                detalle = "Cada elemento de A se suma con el elemento correspondiente de B.";
+                break;
+
+            case "resta":
+                titulo = "Resta de matrices";
+                contenido = mostrarMatriz(restar(A, B));
+                detalle = "Cada elemento de A se resta con el elemento correspondiente de B.";
+                break;
+
+            case "escalar": {
+                const k = Number(document.getElementById("escalar").value);
+                if (!Number.isFinite(k)) throw new Error("Ingresá un escalar válido.");
+
+                titulo = "Multiplicación escalar";
+                contenido = mostrarMatriz(escalar(A, k));
+                detalle = `Cada elemento de A se multiplicó por ${formato(k)}.`;
+                break;
+            }
+
+            case "producto":
+                titulo = "Producto de matrices";
+                contenido = mostrarMatriz(multiplicar(A, B));
+                detalle = "Se multiplican las filas de A por las columnas de B.";
+                break;
+
+            case "detA":
+            case "detB": {
+                const M = operacion === "detA" ? A : B;
+                titulo = "Determinante";
+                contenido = `<h2 style="text-align:center;color:#63e0b4">
+                    ${formato(determinante(M))}
+                </h2>`;
+                detalle = `Det(A) = (a × d) − (b × c) = ${formato(determinante(M))}.`;
+                break;
+            }
+
+            case "transA":
+            case "transB":
+                titulo = "Matriz transpuesta";
+                contenido = mostrarMatriz(
+                    transpuesta(operacion === "transA" ? A : B)
+                );
+                detalle = "Las filas se convierten en columnas y las columnas en filas.";
+                break;
+
+            case "invA":
+            case "invB": {
+                const M = operacion === "invA" ? A : B;
+                const det = determinante(M);
+                const inv = inversa(M);
+
+                titulo = "Matriz inversa";
+
+                if (inv === null) {
+                    contenido = `<p class="notice">La matriz no tiene inversa porque su determinante es cero.</p>`;
+                } else {
+                    contenido = mostrarMatriz(inv);
+                }
+
+                detalle = `Determinante = ${formato(det)}. Para calcular la inversa se utiliza Adj(A) / Det(A).`;
+                break;
+            }
+
+            case "adjA":
+            case "adjB":
+                titulo = "Matriz adjunta";
+                contenido = mostrarMatriz(
+                    adjunta(operacion === "adjA" ? A : B)
+                );
+                detalle = "La adjunta de una matriz 2×2 se obtiene intercambiando los elementos de la diagonal principal y cambiando de signo los otros dos.";
+                break;
+        }
+
+        resultado.innerHTML = `
+            <h3>${titulo}</h3>
+            ${contenido}
+            <p class="formula">${detalle}</p>
+        `;
+
+    } catch (error) {
+        document.getElementById("resultado").innerHTML =
+            `<p class="notice">${error.message}</p>`;
+    }
+}
+
+function transformar() {
+    const tipo = document.getElementById("transformacion").value;
+    const x = Number(document.getElementById("px").value);
+    const y = Number(document.getElementById("py").value);
+
+    const resultado = document.getElementById("resultadoTransformacion");
+
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        resultado.innerHTML = `<p class="notice">Ingresá coordenadas válidas.</p>`;
+        return;
+    }
+
+    let T;
+    let nombre;
+
+    switch (tipo) {
+        case "escala": {
+            const k = Number(document.getElementById("factor").value);
+            if (!Number.isFinite(k)) {
+                resultado.innerHTML = `<p class="notice">Ingresá un factor válido.</p>`;
+                return;
+            }
+            T = [[k, 0], [0, k]];
+            nombre = "Escalamiento";
+            break;
+        }
+
+        case "rotacion": {
+            const grados = Number(document.getElementById("angulo").value);
+            if (!Number.isFinite(grados)) {
+                resultado.innerHTML = `<p class="notice">Ingresá un ángulo válido.</p>`;
+                return;
+            }
+
+            const rad = grados * Math.PI / 180;
+            const c = Math.cos(rad);
+            const s = Math.sin(rad);
+
+            T = [[c, -s], [s, c]];
+            nombre = `Rotación de ${grados} grados`;
+            break;
+        }
+
+        case "reflexionX":
+            T = [[1, 0], [0, -1]];
+            nombre = "Reflexión respecto al eje X";
+            break;
+
+        case "reflexionY":
+            T = [[-1, 0], [0, 1]];
+            nombre = "Reflexión respecto al eje Y";
+            break;
+
+        case "cizalla":
+            T = [[1, 1], [0, 1]];
+            nombre = "Cizallamiento horizontal";
+            break;
+    }
+
+    const nuevoX = T[0][0] * x + T[0][1] * y;
+    const nuevoY = T[1][0] * x + T[1][1] * y;
+
+    resultado.innerHTML = `
+        <h3>${nombre}</h3>
+        <p class="description">Punto original: (${formato(x)}, ${formato(y)})</p>
+        <p class="description">Matriz de transformación:</p>
+        ${mostrarMatriz(T)}
+        <p class="formula">
+            X' = ${formato(T[0][0])}(${formato(x)}) +
+            ${formato(T[0][1])}(${formato(y)})<br>
+            Y' = ${formato(T[1][0])}(${formato(x)}) +
+            ${formato(T[1][1])}(${formato(y)})
+        </p>
+        <h3 style="text-align:center;color:#63e0b4;margin-top:15px">
+            Nuevo punto: (${formato(nuevoX)}, ${formato(nuevoY)})
+        </h3>
+    `;
+}
+
+function restablecer() {
+    const valores = {
+        a11: 2, a12: 1, a21: 3, a22: 4,
+        b11: 1, b12: 2, b21: 2, b22: 1
+    };
+
+    for (const id in valores) {
+        document.getElementById(id).value = valores[id];
+    }
+
+    document.getElementById("escalar").value = 3;
+    document.getElementById("resultado").innerHTML =
+        `<p class="description">Valores restablecidos. Seleccioná una operación.</p>`;
+}
+
+document.getElementById("operacion").addEventListener("change", () => {
+    const op = document.getElementById("operacion").value;
+    document.getElementById("escalarControl").style.display =
+        op === "escalar" ? "block" : "none";
+});
+
+document.getElementById("operacion").dispatchEvent(new Event("change"));
+</script>
+
+</body>
+</html>
